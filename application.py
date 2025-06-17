@@ -29,7 +29,11 @@ llm = ChatGroq(model='llama-3.3-70b-versatile', api_key=groq_api_key)
 embeddings = HuggingFaceEmbeddings(model="sentence-transformers/all-MiniLM-L6-v2")
 
 # load vector database and retriver
-vector_store = Chroma(persist_directory="./chroma_db", embedding_function=embeddings)
+vector_store = Chroma( persist_directory="./chroma_db",
+    embedding_function=embeddings,
+    collection_name="default",  # same name used during creation
+    client_settings={"anonymized_telemetry": False}
+    )
 retriver = vector_store.as_retriever()
 
 # setup prompt
