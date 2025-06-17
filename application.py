@@ -3,7 +3,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # load env variable
-groq_api_kay = os.environ.get('GROQ_API_KEY') 
+groq_api_key = os.environ.get('GROQ_API_KEY') 
+huggface_api_key = os.getenv("HUGGINGFACE_TOKEN") 
+
+
 
 from langchain_groq import ChatGroq
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -15,12 +18,15 @@ from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 import streamlit as st
 
+st.secrets['GROQ_API_KEY'] = groq_api_key
+st.secrets['HUGGINGFACE_TOKEN'] = huggface_api_key
+
 
 # setup llm
-llm = ChatGroq(model='llama-3.3-70b-versatile', api_key=groq_api_kay)
+llm = ChatGroq(model='llama-3.3-70b-versatile', api_key=groq_api_key)
 
 # setup embedding
-embeddings = HuggingFaceEmbeddings(model='sentence-transformers/all-MiniLM-L6-v2')
+embeddings = HuggingFaceEmbeddings(model="sentence-transformers/all-MiniLM-L6-v2")
 
 # load vector database and retriver
 vector_store = Chroma(persist_directory="./chroma_db", embedding_function=embeddings)
